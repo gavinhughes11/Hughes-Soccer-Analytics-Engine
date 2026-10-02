@@ -1,10 +1,33 @@
 from itscalledsoccer import AmericanSoccerAnalysis
+import requests
+import pandas as pd
+
+ASA_BASE_URL = "https://app.americansocceranalysis.com/api/v1"
 
 asa = AmericanSoccerAnalysis()
 
 
+def get_shots(league, season):
+    games = get_games(league, season)
+    game_ids = games["game_id"].tolist()
+    all_shots = []
+
+    for start in range(0, len(game_ids), 100):
+        batch = game_ids[start : start + 100]
+        url = f"{ASA_BASE_URL}/{league}/games/shots"
+        response = requests.get(url, params={"game_id": ",".join(batch)}, timeout=60)
+        response.raise_for_status()
+        all_shots.extend(response.json())
+
+    return pd.DataFrame(all_shots)
+
+
 def get_teams(league):
     return asa.get_teams(leagues=league)
+
+
+def get_games(league, season):
+    return asa.get_games(leagues=league, season_name=season)
 
 
 def get_players(league):
@@ -25,5 +48,5 @@ def get_player_xgoals(league, season):
 
 
 if __name__ == "__main__":
-    mls_xg = get_player_xgoals("mls", "2026")
-    print(mls_xg)
+    shots = get_shots("mls", "2026")
+    print(shots)

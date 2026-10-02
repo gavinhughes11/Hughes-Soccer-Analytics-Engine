@@ -1,3 +1,4 @@
 itscalledsoccer==2.2.0
 pandas==3.0.6
 pyarrow==25.0.1
+requests==2.34.2
