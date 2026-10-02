@@ -1,6 +1,6 @@
 from pathlib import Path
 from config import SEASONS
-from data_sources.asa import get_player_xgoals
+from data_sources.asa import get_player_xgoals, get_shots
 
 DATA_DIR = Path("data")
 
@@ -11,10 +11,14 @@ def main():
     for league, seasons in SEASONS.items():
         for season in seasons:
             print("League:", league, "Season:", season)
-            stats = get_player_xgoals(league=league, season=season)
-            path = DATA_DIR / f"player_xgoals_{league}_{season}.parquet"
-            stats.to_parquet(path, index=False)
-            print(len(stats))
+            xgoals = get_player_xgoals(league=league, season=season)
+            xgoals_path = DATA_DIR / f"player_xgoals_{league}_{season}.parquet"
+            xgoals.to_parquet(xgoals_path, index=False)
+            print("xG rows:", len(xgoals))
+            shots = get_shots(league=league, season=season)
+            shots_path = DATA_DIR / f"shots_{league}_{season}.parquet"
+            shots.to_parquet(shots_path, index=False)
+            print("shots:", len(shots))
 
 
 if __name__ == "__main__":
