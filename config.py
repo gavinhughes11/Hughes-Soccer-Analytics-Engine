@@ -17,3 +17,12 @@ SEASONS = {
     "usl1": ["2024", "2025", "2026"],
     "usls": ["2024-25", "2025-26", "2026"],
 }
+
+CHART_COLORS = {
+    "goal": "#2a78d6",
+    "miss": "#898781",
+    "surface": "#fcfcfb",
+    "lines": "#c3c2b7",
+    "text": "#0b0b0b",
+    "subtext": "#52514e",
+}
