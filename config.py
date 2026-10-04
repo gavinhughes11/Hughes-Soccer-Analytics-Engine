@@ -26,3 +26,13 @@ CHART_COLORS = {
     "text": "#0b0b0b",
     "subtext": "#52514e",
 }
+
+PER90_STATS = [
+    "shots",
+    "shots_on_target",
+    "goals",
+    "xgoals",
+    "key_passes",
+    "primary_assists",
+    "xassists",
+]
