@@ -37,7 +37,7 @@ PER90_STATS = [
     "xassists",
 ]
 
-FINISHING_K = 100
+FINISHING_K = 300
 
 MIN_SHOTS = 20
 
