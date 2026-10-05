@@ -46,3 +46,24 @@ FINISHING_WEIGHT = 0.7
 VOLUME_WEIGHT = 0.3
 
 SEASON_WEIGHTS = [0.7, 0.2, 0.1]
+
+STAT_LABELS = {
+    "shots": "Shots",
+    "shots_on_target": "On target",
+    "goals": "Goals",
+    "xgoals": "xG",
+    "key_passes": "Key passes",
+    "primary_assists": "Assists",
+    "xassists": "xA",
+}
+
+POSITION_LABELS = {
+    "GK": "goalkeepers",
+    "CB": "center backs",
+    "FB": "fullbacks",
+    "DM": "defensive midfielders",
+    "CM": "central midfielders",
+    "AM": "attacking midfielders",
+    "W": "wingers",
+    "ST": "strikers",
+}

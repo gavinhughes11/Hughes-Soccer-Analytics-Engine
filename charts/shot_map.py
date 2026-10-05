@@ -1,9 +1,11 @@
-from mplsoccer import VerticalPitch
-from config import CHART_COLORS
 import pandas as pd
+from mplsoccer import VerticalPitch
+
+from charts.team_colors import team_color
+from config import CHART_COLORS
 
 
-def plot_shot_map(shots, title):
+def plot_shot_map(shots, title, color=CHART_COLORS["goal"]):
     goals = shots[shots["goal"] == 1]
     no_goals = shots[shots["goal"] == 0]
 
@@ -29,7 +31,7 @@ def plot_shot_map(shots, title):
         goals["shot_location_x"],
         goals["shot_location_y"],
         s=goals["shot_xg"] * 1000 + 50,
-        c=CHART_COLORS["goal"],
+        c=color,
         edgecolors=CHART_COLORS["surface"],
         linewidths=1,
         label="Goal",
@@ -64,5 +66,6 @@ def plot_shot_map(shots, title):
 if __name__ == "__main__":
     shots = pd.read_parquet("data/shots_mls_2026.parquet")
     messi = shots[shots["shooter_player_name"] == "Lionel Messi"]
-    fig = plot_shot_map(messi, "Lionel Messi - MLS 2026")
+    color = team_color(messi["team_id"].iloc[0])
+    fig = plot_shot_map(messi, "Lionel Messi - MLS 2026", color=color)
     fig.savefig("images/messi_2026_shot_map.png", dpi=200, bbox_inches="tight")
