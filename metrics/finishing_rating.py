@@ -1,5 +1,11 @@
 import pandas as pd
-from config import FINISHING_K, MIN_SHOTS, FINISHING_WEIGHT, VOLUME_WEIGHT
+from config import (
+    FINISHING_K,
+    MIN_SHOTS,
+    FINISHING_WEIGHT,
+    VOLUME_WEIGHT,
+    SEASON_WEIGHTS,
+)
 from metrics.per90 import add_per90, filter_min_minutes
 
 
@@ -29,11 +35,42 @@ def season_scores(stats, k=FINISHING_K):
     return stats
 
 
+def finishing_rating(current, previous, two_back):
+    previous = previous[["player_id", "season_score"]].rename(
+        columns={"season_score": "prev_score"}
+    )
+    two_back = two_back[["player_id", "season_score"]].rename(
+        columns={"season_score": "prev2_score"}
+    )
+    rating = current.merge(previous, on=["player_id"], how="left")
+    rating = rating.merge(two_back, on=["player_id"], how="left")
+    rating["prev_score"] = rating["prev_score"].fillna(rating["season_score"])
+    rating["prev2_score"] = rating["prev2_score"].fillna(rating["season_score"])
+    rating["finishing_rating"] = (
+        SEASON_WEIGHTS[0] * rating["season_score"]
+        + SEASON_WEIGHTS[1] * rating["prev_score"]
+        + SEASON_WEIGHTS[2] * rating["prev2_score"]
+    )
+    return rating
+
+
 if __name__ == "__main__":
-    stats = pd.read_parquet("data/player_xgoals_mls_2026.parquet")
-    stats = season_scores(stats)
-    scores = stats.sort_values("season_score", ascending=False).head(10)[
-        ["player_name", "shots", "goals", "xgoals", "season_score"]
-    ]
-    print(len(scores))
-    print(scores)
+    current = season_scores(pd.read_parquet("data/player_xgoals_mls_2026.parquet"))
+    previous = season_scores(pd.read_parquet("data/player_xgoals_mls_2025.parquet"))
+    two_back = season_scores(pd.read_parquet("data/player_xgoals_mls_2024.parquet"))
+
+    rating = finishing_rating(current, previous, two_back)
+    print(len(rating))
+    top = rating.sort_values("finishing_rating", ascending=False).head(10)
+    print(
+        top[
+            [
+                "player_name",
+                "shots",
+                "goals",
+                "xgoals",
+                "season_score",
+                "finishing_rating",
+            ]
+        ].round(1)
+    )
