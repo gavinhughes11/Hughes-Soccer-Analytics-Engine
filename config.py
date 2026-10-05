@@ -36,3 +36,11 @@ PER90_STATS = [
     "primary_assists",
     "xassists",
 ]
+
+FINISHING_K = 40
+
+MIN_SHOTS = 20
+
+FINISHING_WEIGHT = 0.7
+
+VOLUME_WEIGHT = 0.3
