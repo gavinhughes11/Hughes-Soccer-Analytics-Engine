@@ -1,3 +1,5 @@
+DATA_UPDATED = "Oct 2, 2026"
+
 LEAGUES = {
     "mls": "Major League Soccer",
     "nwsl": "National Women's Soccer League",
