@@ -220,3 +220,6 @@ __marimo__/
 # Claude
 .claude/
 .agents/
+
+# Handoff files
+HANDOFF.md
