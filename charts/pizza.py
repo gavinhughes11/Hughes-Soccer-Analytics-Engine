@@ -72,5 +72,5 @@ if __name__ == "__main__":
     stats = add_percentiles(stats, [f"{stat}_per90" for stat in PER90_STATS])
     player = stats[stats["player_name"] == "Hugo Cuypers"].iloc[0]
     color = team_color(player["team_id"])
-    fig = plot_pizza(player, "Hugo Cuypers · MLS 2026", "MLS", color=color)
+    fig = plot_pizza(player, "Hugo Cuypers - MLS 2026", "MLS", color=color)
     fig.savefig("images/cuypers_2026_pizza.png", dpi=200, bbox_inches="tight")
