@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 from config import PER90_STATS, SEASONS, STAT_LABELS
 from app.data import load_raw_stats, load_finishing_ratings, load_player_stats
 from charts.leaderboard import plot_leaderboard
+from charts.export import to_png
 
 league = st.session_state["league"]
 season = st.session_state["season"]
@@ -34,8 +35,16 @@ else:
 fig = plot_leaderboard(
     table, stat, f"Top {n} - {labels[stat]} - {league.upper()} {season}", subtitle, n=n
 )
-st.pyplot(fig)
+png = to_png(fig)
 plt.close(fig)
+st.image(png, width="stretch")
+st.download_button(
+    label="Download PNG",
+    data=png,
+    file_name=f"{league}-{season}-top-{n}-{stat}.png",
+    mime="image/png",
+    on_click="ignore",
+)
 
 st.dataframe(
     table.sort_values(stat, ascending=False).head(n)[

@@ -4,7 +4,7 @@ Player analytics for American pro soccer: **MLS, NWSL, USL Championship, USL Lea
 
 **[Open the live app →](https://hughes-soccer-analytics.streamlit.app)**
 <p align="center">
-  <img src="images/app_player_page.png" alt="Web page layout" width="100%">
+  <img src="images/app_player_page.png" alt="Player page in the live app" width="100%">
 </p>
 
 <p align="center">
