@@ -69,3 +69,5 @@ POSITION_LABELS = {
     "W": "wingers",
     "ST": "strikers",
 }
+
+CHART_CREDIT = "Data: American Soccer Analysis"

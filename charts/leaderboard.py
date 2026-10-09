@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 from charts.team_colors import team_color
 from config import CHART_COLORS
 from metrics.per90 import add_per90, filter_min_minutes
+from charts.credit import add_credit
 
 
 def plot_leaderboard(table, stat, title, subtitle, n=10):
@@ -30,6 +31,7 @@ def plot_leaderboard(table, stat, title, subtitle, n=10):
     ax.tick_params(axis="y", length=0, labelsize=11, labelcolor=CHART_COLORS["text"])
     fig.suptitle(title, fontsize=16, color=CHART_COLORS["text"])
     ax.set_title(subtitle, fontsize=11, color=CHART_COLORS["subtext"])
+    add_credit(fig)
     return fig
 
 

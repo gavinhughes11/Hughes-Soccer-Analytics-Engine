@@ -11,6 +11,7 @@ from config import (
 )
 from metrics.per90 import add_per90, filter_min_minutes
 from metrics.percentiles import add_percentiles
+from charts.credit import add_credit
 
 
 def plot_pizza(player, title, league_name, color=CHART_COLORS["goal"]):
@@ -61,6 +62,7 @@ def plot_pizza(player, title, league_name, color=CHART_COLORS["goal"]):
     fig.text(
         0.5, 0.935, subtitle, ha="center", fontsize=11, color=CHART_COLORS["subtext"]
     )
+    add_credit(fig)
     return fig
 
 

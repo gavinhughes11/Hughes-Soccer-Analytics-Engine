@@ -1,8 +1,8 @@
 import pandas as pd
 from mplsoccer import VerticalPitch
-
 from charts.team_colors import team_color
 from config import CHART_COLORS
+from charts.credit import add_credit
 
 
 def plot_shot_map(shots, title, color=CHART_COLORS["goal"]):
@@ -59,7 +59,7 @@ def plot_shot_map(shots, title, color=CHART_COLORS["goal"]):
 
     fig.suptitle(title, fontsize=16, color=CHART_COLORS["text"])
     ax.set_title(subtitle, fontsize=11, color=CHART_COLORS["subtext"])
-
+    add_credit(fig)
     return fig
 
 
