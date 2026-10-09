@@ -11,7 +11,9 @@ def plot_leaderboard(table, stat, title, subtitle, n=10):
     fig.set_facecolor(CHART_COLORS["surface"])
     ax.set_facecolor(CHART_COLORS["surface"])
     colors = [team_color(team_id) for team_id in top["team_id"]]
-    ax.barh(top["player_name"], top[stat], color=colors, height=0.6)
+    positions = range(len(top))
+    ax.barh(positions, top[stat], color=colors, height=0.6)
+    ax.set_yticks(positions, top["player_name"])
     for y, (value, team) in enumerate(zip(top[stat], top["team_name"])):
         ax.text(
             value,

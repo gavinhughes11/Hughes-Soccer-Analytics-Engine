@@ -28,7 +28,7 @@ if stat == "finishing_rating":
     )
     subtitle = "Min. 450 minutes and 20 shots - bar color = team"
 else:
-    table = load_player_stats(league, season)
+    table = stats
     subtitle = "Min. 450 minutes - bar color = team"
 
 fig = plot_leaderboard(
