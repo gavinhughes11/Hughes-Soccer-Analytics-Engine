@@ -7,8 +7,8 @@ ASA_BASE_URL = "https://app.americansocceranalysis.com/api/v1"
 asa = AmericanSoccerAnalysis()
 
 
-def get_shots(league, season):
-    games = get_games(league, season)
+def get_shots(league, season, stages):
+    games = get_games(league, season, stages)
     game_ids = games["game_id"].tolist()
     all_shots = []
 
@@ -26,17 +26,17 @@ def get_teams(league):
     return asa.get_teams(leagues=league)
 
 
-def get_games(league, season):
-    return asa.get_games(leagues=league, season_name=season)
+def get_games(league, season, stages):
+    return asa.get_games(leagues=league, season_name=season, stages=stages)
 
 
 def get_players(league):
     return asa.get_players(leagues=league)
 
 
-def get_player_xgoals(league, season):
+def get_player_xgoals(league, season, stages):
     stats = asa.get_player_xgoals(
-        leagues=league, season_name=season, split_by_teams=True
+        leagues=league, season_name=season, stage_name=stages, split_by_teams=True
     )
     players = get_players(league)
     players = players[["player_id", "player_name"]]
@@ -48,5 +48,5 @@ def get_player_xgoals(league, season):
 
 
 if __name__ == "__main__":
-    shots = get_shots("mls", "2026")
+    shots = get_shots("mls", "2026", ["Regular Season"])
     print(shots)
