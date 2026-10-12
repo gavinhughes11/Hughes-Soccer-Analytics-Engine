@@ -67,8 +67,8 @@ k decides how much to trust a player's own record. I tested candidate values by 
 | **k = 300 (chosen, and best)** | **1.24% better** |
 | k = 350 | 1.22% better |
 
-- The error is almost flat from 250 to 350. 300 came out best, only 0.004% ahead of 275, so the exact value barely matters.
-- A small k, which trusts each player's own record, does worse than assuming everyone is average.
+- The error is almost flat from 250 to 350. 300 came out best, but only by 0.005 points over 275 (1.241% vs 1.236%), so the exact value barely matters.
+- A small k, which trusts each player's own record, does worse than assuming everyone is average. With no shrinkage at all (k = 0, raw goals minus xG), the prediction is 176% worse.
 - Even the best k is only about 1.2% better than "everyone is average." **Most of a player's goals above xG in one season is noise.** Finishing barely carries over from one season to the next.
 
 ## Data

@@ -7,7 +7,7 @@ from metrics.finishing_rating import finishing_rating, season_scores
 
 
 def file_suffix(playoffs):
-    if playoffs == True:
+    if playoffs:
         return ""
     else:
         return "_regular"

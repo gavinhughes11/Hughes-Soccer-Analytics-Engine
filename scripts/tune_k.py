@@ -4,10 +4,11 @@ from metrics.finishing_rating import combine_player_rows, shrink
 
 
 if __name__ == "__main__":
-    candidates1 = [0, 10, 20, 40, 60, 100, 150, 200, 300, 500, 1000]
-    candidates2 = [250, 260, 270, 280, 290, 300, 310, 320, 330, 340, 350]
+    candidates = [0, 10, 20, 40, 60, 100, 150, 200, 250, 275, 300, 350, 500, 1000]
 
     results = []
+
+    pairs = 0
 
     for league, seasons in SEASONS.items():
         for i in range(len(seasons) - 1):
@@ -22,10 +23,19 @@ if __name__ == "__main__":
             this = this[this["shots"] >= 1]
             nxt = nxt[nxt["shots"] >= 10]
             both = this.merge(nxt, on="player_id", suffixes=("_this", "_next"))
+            pairs += len(both)
             actual = (both["goals_next"] - both["xgoals_next"]) / (
                 both["shots_next"]
             ) - avg_next
-            for k in candidates2:
+            average_error = (both["shots_next"] * actual**2).sum()
+            results.append(
+                {
+                    "k": "average",
+                    "error": average_error,
+                    "weight": both["shots_next"].sum(),
+                }
+            )
+            for k in candidates:
                 predicted = (
                     shrink(
                         both["goals_this"],
@@ -40,5 +50,8 @@ if __name__ == "__main__":
                 results.append(
                     {"k": k, "error": error, "weight": both["shots_next"].sum()}
                 )
-        table = pd.DataFrame(results).groupby("k").sum()
-        print(table["error"] / table["weight"])
+    table = pd.DataFrame(results).groupby("k", sort=False).sum()
+    error_rate = table["error"] / table["weight"]
+    vs_average = 100 * (error_rate["average"] - error_rate) / error_rate["average"]
+    print("Player-season pairs:", pairs)
+    print(vs_average.round(3))
