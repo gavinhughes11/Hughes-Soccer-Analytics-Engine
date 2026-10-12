@@ -14,15 +14,16 @@ from charts.export import to_png
 
 league = st.session_state["league"]
 season = st.session_state["season"]
+playoffs = st.session_state["playoffs"]
 
-stats = load_player_stats(league, season)
+stats = load_player_stats(league, season, playoffs)
 
 names = sorted(stats["player_name"].unique())
 name = st.selectbox("Player", names)
 
 rows = stats[stats["player_name"] == name]
 player = rows.sort_values("minutes_played").iloc[-1]
-raw = load_raw_stats(league, season)
+raw = load_raw_stats(league, season, playoffs)
 all_rows = raw[raw["player_id"] == player["player_id"]]
 file_start = f"{name}-{league}-{season}".lower().replace(" ", "-")
 color = team_color(player["team_id"])
@@ -35,7 +36,7 @@ st.caption(
 rating = "-"
 
 if season == SEASONS[league][-1]:
-    ratings = load_finishing_ratings(league)
+    ratings = load_finishing_ratings(league, playoffs)
     match = ratings[ratings["player_id"] == player["player_id"]]
     if len(match) > 0:
         rating = int(round(match["finishing_rating"].iloc[0], 0))
@@ -51,7 +52,7 @@ cols[4].metric(
     help="0 to 100. Needs 20+ shots and 450+ minutes. Latest season only.",
 )
 
-shots = load_shots(league, season)
+shots = load_shots(league, season, playoffs)
 player_shots = shots[shots["shooter_player_id"] == player["player_id"]]
 
 left, right = st.columns(2)

@@ -1,4 +1,4 @@
-DATA_UPDATED = "Oct 2, 2026"
+DATA_UPDATED = "Oct 10, 2026"
 
 LEAGUES = {
     "mls": "Major League Soccer",

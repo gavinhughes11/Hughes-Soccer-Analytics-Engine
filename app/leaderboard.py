@@ -7,7 +7,8 @@ from charts.export import to_png
 
 league = st.session_state["league"]
 season = st.session_state["season"]
-stats = load_player_stats(league, season)
+playoffs = st.session_state["playoffs"]
+stats = load_player_stats(league, season, playoffs)
 
 labels = {f"{s}_per90": f"{STAT_LABELS[s]} per 90" for s in PER90_STATS}
 if season == SEASONS[league][-1]:
@@ -18,9 +19,9 @@ stat = st.selectbox("Stat", list(labels), format_func=labels.get)
 n = st.slider("Number of players", 5, 25, 10)
 
 if stat == "finishing_rating":
-    ratings = load_finishing_ratings(league)
+    ratings = load_finishing_ratings(league, playoffs)
     teams = (
-        load_raw_stats(league, season)
+        load_raw_stats(league, season, playoffs)
         .sort_values("minutes_played")
         .drop_duplicates("player_id", keep="last")
     )

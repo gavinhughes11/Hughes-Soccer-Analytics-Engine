@@ -17,7 +17,7 @@ Player analytics for American pro soccer: **MLS, NWSL, USL Championship, USL Lea
 
 ## What's in the app
 
-Pick a league and season in the sidebar. Each league has its three most recent seasons.
+Pick a league and season in the sidebar. Each league has its three most recent seasons. **Include playoffs** is on by default; turn it off to see regular season only.
 
 **Player page**
 - Search any player with 450+ minutes for a team in that season.
@@ -28,6 +28,8 @@ Pick a league and season in the sidebar. Each league has its three most recent s
 **Leaderboard**
 - Shows the top 5–25 players for the Finishing Rating or any of the 7 per-90 stats.
 - Bars use team colors, with a table underneath.
+
+Every chart has a **Download PNG** button for a full-resolution copy.
 
 ## The Finishing Rating
 
@@ -55,31 +57,31 @@ Cuypers beat his xG by more than Messi did, but on far fewer shots, so the ratin
 
 ## Choosing k: a backtest
 
-k decides how much to trust a player's own record. I tested candidate values by using each player's finishing in one season to predict their finishing in the next. The test covered every pair of consecutive seasons in all five leagues: 10 season pairs and 1,481 player-season pairs, weighted by shots. The code is in [`scripts/tune_k.py`](scripts/tune_k.py).
+k decides how much to trust a player's own record. I tested candidate values by using each player's finishing in one season to predict their finishing in the next. The test covered every pair of consecutive seasons in all five leagues: 10 season pairs and 1,493 player-season pairs, weighted by shots. The code is in [`scripts/tune_k.py`](scripts/tune_k.py).
 
 | Prediction | Error compared with "everyone is average" |
 |---|---|
-| k = 40 | 8.5% worse |
-| k = 250 | 1.34% better |
-| k = 275 (best) | 1.35% better |
-| **k = 300 (chosen)** | **1.34% better** |
-| k = 350 | 1.31% better |
+| k = 40 | 9.2% worse |
+| k = 250 | 1.21% better |
+| k = 275 | 1.24% better |
+| **k = 300 (chosen, and best)** | **1.24% better** |
+| k = 350 | 1.22% better |
 
-- The error is almost flat from 250 to 350. 275 was best by only 0.005%, so I used the rounder 300 rather than claim false precision.
+- The error is almost flat from 250 to 350. 300 came out best, only 0.004% ahead of 275, so the exact value barely matters.
 - A small k, which trusts each player's own record, does worse than assuming everyone is average.
-- Even the best k is only about 1.3% better than "everyone is average." **Most of a player's goals above xG in one season is noise.** Finishing barely carries over from one season to the next.
+- Even the best k is only about 1.2% better than "everyone is average." **Most of a player's goals above xG in one season is noise.** Finishing barely carries over from one season to the next.
 
 ## Data
 
 - **Source:** [American Soccer Analysis](https://www.americansocceranalysis.com). Player stats come through the [itscalledsoccer](https://github.com/American-Soccer-Analysis/itscalledsoccer) package, and shots come from the ASA API.
-- **Coverage:** regular season and playoffs combined. Last updated Oct 2, 2026.
-- **Not covered:** Leagues Cup, U.S. Open Cup and CONCACAF competitions.
+- **Coverage:** regular season, with a sidebar toggle to include playoffs. Last updated Oct 10, 2026.
+- **Not covered:** Leagues Cup, U.S. Open Cup, CONCACAF competitions and in-league cups (NWSL Challenge Cup, USL Jägermeister Cup).
 
 ## Limitations
 
 - Totals can differ from other sites, because of which competitions are covered and how goals are credited.
 - The 450-minute minimum applies per team, so a traded player can appear once for each team in per-90 leaderboards.
-- The Finishing Rating is only shown for the latest season, and new seasons have small samples. For example, USL Super League 2026 has just 3 rated players.
+- The Finishing Rating is only shown for the latest season, and new seasons have small samples. For example, USL Super League 2026 has just 5 rated players.
 - Percentiles compare players within their position (GK, CB, FB, DM, CM, AM, W, ST).
 - The stats are shot-based, so they say little about defenders and deep-lying midfielders.
 - Some USL clubs don't have team colors yet and use a default blue.
@@ -122,9 +124,7 @@ config.py          Settings: leagues, seasons, minimums, weights, colors
 
 ## What's next
 
-- An "include playoffs" toggle
 - A weekly automatic data refresh
-- Chart downloads sized for social media
 - Goals added (g+), so defenders and midfielders get useful profiles
 - A USL-to-MLS prospect finder
 
