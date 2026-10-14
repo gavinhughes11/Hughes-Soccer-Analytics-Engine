@@ -127,6 +127,7 @@ config.py          Settings: leagues, seasons, minimums, weights, colors
 - A weekly automatic data refresh
 - Goals added (g+), so defenders and midfielders get useful profiles
 - A USL-to-MLS prospect finder
+- A goalie tracked to see who's hot and how it's impacting their team
 
 ## Built with
 
