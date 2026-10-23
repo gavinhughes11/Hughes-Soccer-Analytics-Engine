@@ -1,5 +1,6 @@
 import streamlit as st
-from config import LEAGUES, SEASONS, DATA_UPDATED
+from config import LEAGUES, SEASONS
+from pathlib import Path
 
 st.set_page_config(page_title="Hughes Soccer Analytics", page_icon="⚽", layout="wide")
 
@@ -13,10 +14,11 @@ if playoffs:
     stages_text = "regular season + playoffs"
 else:
     stages_text = "regular season only"
+updated = Path("data/last_updated.txt").read_text()
 
 st.sidebar.caption(
     "Data: [American Soccer Analysis](https://www.americansocceranalysis.com)"
-    f" - {stages_text} - updated {DATA_UPDATED}"
+    f" - {stages_text} - updated {updated}"
 )
 
 pages = st.navigation(

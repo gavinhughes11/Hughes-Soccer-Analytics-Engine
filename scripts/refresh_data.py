@@ -1,3 +1,4 @@
+from datetime import date
 from pathlib import Path
 from config import SEASONS
 from data_sources.asa import get_player_xgoals, get_shots
@@ -27,6 +28,11 @@ def main():
                 shots_path = DATA_DIR / f"shots_{league}_{season}{suffix}.parquet"
                 shots.to_parquet(shots_path, index=False)
                 print("shots:", len(shots))
+    today = date.today()
+    updated = f"{today:%b} {today.day}, {today.year}"
+    path = DATA_DIR / "last_updated.txt"
+    path.write_text(updated)
+    print(f"Data updated: {updated}")
 
 
 if __name__ == "__main__":

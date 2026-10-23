@@ -45,43 +45,43 @@ Goals minus xG (expected goals) is the usual way to measure finishing, but it's 
 4. **Season score** = 0.7 × percentile of shrunk finishing + 0.3 × percentile of shots per 90. These percentiles compare across all positions.
 5. **Final rating** = 0.7 × this season + 0.2 × last season + 0.1 × two seasons ago. A missing season counts as this season's score.
 
-Examples from MLS 2026:
+Examples from MLS 2026 (as of Oct 22, 2026):
 
 | Player | Shots | Goals | xG | Finishing Rating |
 |---|---|---|---|---|
-| Lionel Messi | 149 | 21 | 19.3 | 93 |
+| Lionel Messi | 169 | 25 | 23.8 | 91 |
 | Hugo Cuypers | 40 | 13 | 10.5 | 72 |
-| Rafael Navarro | 80 | 15 | 18.4 | 31 |
+| Rafael Navarro | 87 | 18 | 19.8 | 41 |
 
 Cuypers beat his xG by more than Messi did, but on far fewer shots, so the rating trusts it less.
 
 ## Choosing k: a backtest
 
-k decides how much to trust a player's own record. I tested candidate values by using each player's finishing in one season to predict their finishing in the next. The test covered every pair of consecutive seasons in all five leagues: 10 season pairs and 1,493 player-season pairs, weighted by shots. The code is in [`scripts/tune_k.py`](scripts/tune_k.py).
+k decides how much to trust a player's own record. I tested candidate values by using each player's finishing in one season to predict their finishing in the next. The test covered every pair of consecutive seasons in all five leagues: 10 season pairs and 1,530 player-season pairs, weighted by shots. The code is in [`scripts/tune_k.py`](scripts/tune_k.py). These numbers are as of Oct 22, 2026. The 2026 season is still in progress, so they move a little with each data refresh.
 
 | Prediction | Error compared with "everyone is average" |
 |---|---|
-| k = 40 | 9.2% worse |
-| k = 250 | 1.21% better |
-| k = 275 | 1.24% better |
-| **k = 300 (chosen, and best)** | **1.24% better** |
-| k = 350 | 1.22% better |
+| k = 40 | 10.1% worse |
+| k = 250 | 0.99% better |
+| k = 275 | 1.03% better |
+| **k = 300 (chosen)** | **1.05% better** |
+| k = 350 | 1.06% better |
 
-- The error is almost flat from 250 to 350. 300 came out best, but only by 0.005 points over 275 (1.241% vs 1.236%), so the exact value barely matters.
-- A small k, which trusts each player's own record, does worse than assuming everyone is average. With no shrinkage at all (k = 0, raw goals minus xG), the prediction is 176% worse.
-- Even the best k is only about 1.2% better than "everyone is average." **Most of a player's goals above xG in one season is noise.** Finishing barely carries over from one season to the next.
+- The error is almost flat from 250 to 350 (0.99% to 1.06% better than average). The best k shifts a little as new games come in, and 300 sits in the middle of that flat range, so the exact value barely matters.
+- A small k, which trusts each player's own record, does worse than assuming everyone is average. With no shrinkage at all (k = 0, raw goals minus xG), the prediction is 180% worse.
+- Even the best k is only about 1% better than "everyone is average." **Most of a player's goals above xG in one season is noise.** Finishing barely carries over from one season to the next.
 
 ## Data
 
 - **Source:** [American Soccer Analysis](https://www.americansocceranalysis.com). Player stats come through the [itscalledsoccer](https://github.com/American-Soccer-Analysis/itscalledsoccer) package, and shots come from the ASA API.
-- **Coverage:** regular season, with a sidebar toggle to include playoffs. Last updated Oct 10, 2026.
+- **Coverage:** regular season, with a sidebar toggle to include playoffs. The app's sidebar shows when the data was last refreshed.
 - **Not covered:** Leagues Cup, U.S. Open Cup, CONCACAF competitions and in-league cups (NWSL Challenge Cup, USL Jägermeister Cup).
 
 ## Limitations
 
 - Totals can differ from other sites, because of which competitions are covered and how goals are credited.
 - The 450-minute minimum applies per team, so a traded player can appear once for each team in per-90 leaderboards.
-- The Finishing Rating is only shown for the latest season, and new seasons have small samples. For example, USL Super League 2026 has just 5 rated players.
+- The Finishing Rating is only shown for the latest season, and new seasons have small samples. For example, USL Super League 2026 has just 9 rated players.
 - Percentiles compare players within their position (GK, CB, FB, DM, CM, AM, W, ST).
 - The stats are shot-based, so they say little about defenders and deep-lying midfielders.
 - Some USL clubs don't have team colors yet and use a default blue.

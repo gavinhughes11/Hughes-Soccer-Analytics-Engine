@@ -1,5 +1,3 @@
-DATA_UPDATED = "Oct 10, 2026"
-
 LEAGUES = {
     "mls": "Major League Soccer",
     "nwsl": "National Women's Soccer League",
