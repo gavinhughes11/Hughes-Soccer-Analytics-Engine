@@ -1,5 +1,7 @@
 # Hughes Soccer Analytics Engine
 
+![Tests](https://github.com/gavinhughes11/Hughes-Soccer-Analytics-Engine/actions/workflows/tests.yml/badge.svg)
+
 Player analytics for American pro soccer: **MLS, NWSL, USL Championship, USL League One and USL Super League**. It has shot maps, percentile profiles, leaderboards and a custom **Finishing Rating**, built with Python and Streamlit.
 
 **[Open the live app →](https://hughes-soccer-analytics.streamlit.app)**
@@ -74,7 +76,8 @@ k decides how much to trust a player's own record. I tested candidate values by 
 ## Data
 
 - **Source:** [American Soccer Analysis](https://www.americansocceranalysis.com). Player stats come through the [itscalledsoccer](https://github.com/American-Soccer-Analysis/itscalledsoccer) package, and shots come from the ASA API.
-- **Coverage:** regular season, with a sidebar toggle to include playoffs. The app's sidebar shows when the data was last refreshed.
+- **Coverage:** regular season, with a sidebar toggle to include playoffs.
+- **Updates:** a GitHub Actions workflow refreshes the data every Tuesday, and the app's sidebar shows the date of the last refresh.
 - **Not covered:** Leagues Cup, U.S. Open Cup, CONCACAF competitions and in-league cups (NWSL Challenge Cup, USL Jägermeister Cup).
 
 ## Limitations
@@ -85,7 +88,7 @@ k decides how much to trust a player's own record. I tested candidate values by 
 - Percentiles compare players within their position (GK, CB, FB, DM, CM, AM, W, ST).
 - The stats are shot-based, so they say little about defenders and deep-lying midfielders.
 - Some USL clubs don't have team colors yet and use a default blue.
-- The data is refreshed by hand.
+- The data refreshes weekly, so the newest games can take up to a week to appear.
 
 ## Run it locally
 
@@ -120,14 +123,14 @@ scripts/           Data refresh, k backtest, team color builder
 data/              Saved data (parquet files) and team colors
 tests/             pytest tests
 config.py          Settings: leagues, seasons, minimums, weights, colors
+.github/workflows/ Weekly data refresh and tests on every push (GitHub Actions)
 ```
 
 ## What's next
 
-- A weekly automatic data refresh
 - Goals added (g+), so defenders and midfielders get useful profiles
 - A USL-to-MLS prospect finder
-- A goalie tracked to see who's hot and how it's impacting their team
+- A goalie tracker to see who's hot and how it's impacting their team
 
 ## Built with
 
