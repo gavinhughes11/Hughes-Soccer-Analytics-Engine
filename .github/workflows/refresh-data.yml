@@ -19,7 +19,9 @@ jobs:
           python-version: "3.13"
           cache: pip
       - run: pip install -r requirements.txt
-      - run: python -m scripts.refresh_data
+      - name: Refresh data (retry once if ASA is slow)
+        run: |
+          python -m scripts.refresh_data || { sleep 300; python -m scripts.refresh_data; }
       - name: Commit new data
         run: |
           git config user.name "github-actions[bot]"

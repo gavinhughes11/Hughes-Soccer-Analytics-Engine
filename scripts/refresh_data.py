@@ -1,7 +1,7 @@
 from datetime import date
 from pathlib import Path
 from config import SEASONS
-from data_sources.asa import get_player_xgoals, get_shots
+from data_sources.asa import get_player_goals_added, get_player_xgoals, get_shots
 
 DATA_DIR = Path("data")
 
@@ -28,6 +28,14 @@ def main():
                 shots_path = DATA_DIR / f"shots_{league}_{season}{suffix}.parquet"
                 shots.to_parquet(shots_path, index=False)
                 print("shots:", len(shots))
+                gplus = get_player_goals_added(
+                    league=league, season=season, stages=stages
+                )
+                gplus_path = (
+                    DATA_DIR / f"player_goals_added_{league}_{season}{suffix}.parquet"
+                )
+                gplus.to_parquet(gplus_path, index=False)
+                print("g+ rows:", len(gplus))
     today = date.today()
     updated = f"{today:%b} {today.day}, {today.year}"
     path = DATA_DIR / "last_updated.txt"

@@ -47,6 +47,23 @@ def get_player_xgoals(league, season, stages):
     return stats
 
 
+def get_player_goals_added(league, season, stages):
+    stats = asa.get_player_goals_added(
+        leagues=league, season_name=season, stage_name=stages, split_by_teams=True
+    )
+    rows = []
+    for _, row in stats.iterrows():
+        record = {"player_id": row["player_id"], "team_id": row["team_id"]}
+        for action in row["data"]:
+            column = f"gplus_{action['action_type'].lower()}"
+            record[column] = action["goals_added_above_avg"]
+        rows.append(record)
+    gplus = pd.DataFrame(rows)
+    action_columns = [c for c in gplus.columns if c.startswith("gplus_")]
+    gplus["gplus"] = gplus[action_columns].sum(axis=1)
+    return gplus
+
+
 if __name__ == "__main__":
     shots = get_shots("mls", "2026", ["Regular Season"])
     print(shots)
