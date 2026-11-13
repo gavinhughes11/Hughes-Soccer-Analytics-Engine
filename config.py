@@ -37,6 +37,16 @@ PER90_STATS = [
     "xassists",
 ]
 
+GPLUS_STATS = [
+    "gplus",
+    "gplus_dribbling",
+    "gplus_fouling",
+    "gplus_interrupting",
+    "gplus_passing",
+    "gplus_receiving",
+    "gplus_shooting",
+]
+
 FINISHING_K = 300
 
 MIN_SHOTS = 20
