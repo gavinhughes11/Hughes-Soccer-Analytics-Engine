@@ -1,9 +1,11 @@
 import pandas as pd
 import streamlit as st
-from config import GPLUS_STATS, PER90_STATS, SEASONS
+
+from config import GK_PER90_STATS, GPLUS_STATS, PER90_STATS, SEASONS
+from metrics.finishing_rating import finishing_rating, season_scores
+from metrics.goalkeeping import add_goalkeeper_metrics
 from metrics.per90 import add_per90, filter_min_minutes
 from metrics.percentiles import add_percentiles
-from metrics.finishing_rating import finishing_rating, season_scores
 
 
 def file_suffix(playoffs):
@@ -22,6 +24,15 @@ def read_stats(league, season, playoffs):
     return stats.merge(gplus, on=["player_id", "team_id"], how="left")
 
 
+def read_goalkeeper_stats(league, season, playoffs):
+    suffix = file_suffix(playoffs)
+    stats = pd.read_parquet(f"data/goalkeeper_xgoals_{league}_{season}{suffix}.parquet")
+    gplus = pd.read_parquet(
+        f"data/goalkeeper_goals_added_{league}_{season}{suffix}.parquet"
+    )
+    return stats.merge(gplus, on=["player_id", "team_id"], how="left")
+
+
 @st.cache_data
 def load_player_stats(league, season, playoffs):
     stats = read_stats(league, season, playoffs)
@@ -29,6 +40,18 @@ def load_player_stats(league, season, playoffs):
     stats = add_per90(stats, PER90_STATS + GPLUS_STATS)
     per90_columns = [f"{stat}_per90" for stat in PER90_STATS + GPLUS_STATS]
     stats = add_percentiles(stats, per90_columns)
+    return stats
+
+
+@st.cache_data
+def load_goalkeeper_stats(league, season, playoffs):
+    stats = read_goalkeeper_stats(league, season, playoffs)
+    stats = filter_min_minutes(stats)
+    stats = add_goalkeeper_metrics(stats)
+    stats["general_position"] = "GK"
+    stats = add_per90(stats, GK_PER90_STATS)
+    percentile_columns = [f"{stat}_per90" for stat in GK_PER90_STATS] + ["save_pct"]
+    stats = add_percentiles(stats, percentile_columns)
     return stats
 
 

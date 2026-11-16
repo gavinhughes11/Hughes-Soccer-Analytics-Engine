@@ -47,6 +47,18 @@ GPLUS_STATS = [
     "gplus_shooting",
 ]
 
+GK_GPLUS_STATS = [
+    "gk_gplus",
+    "gk_gplus_claiming",
+    "gk_gplus_fielding",
+    "gk_gplus_handling",
+    "gk_gplus_passing",
+    "gk_gplus_shotstopping",
+    "gk_gplus_sweeping",
+]
+
+GK_PER90_STATS = ["goals_prevented"] + GK_GPLUS_STATS
+
 GPLUS_LABELS = {
     "gplus_dribbling": "Dribbling",
     "gplus_fouling": "Fouling",
@@ -54,6 +66,15 @@ GPLUS_LABELS = {
     "gplus_passing": "Passing",
     "gplus_receiving": "Receiving",
     "gplus_shooting": "Shooting",
+}
+
+GK_GPLUS_LABELS = {
+    "gk_gplus_claiming": "Claiming",
+    "gk_gplus_fielding": "Fielding",
+    "gk_gplus_handling": "Handling",
+    "gk_gplus_passing": "Passing",
+    "gk_gplus_shotstopping": "Shot-stopping",
+    "gk_gplus_sweeping": "Sweeping",
 }
 
 FINISHING_K = 300
