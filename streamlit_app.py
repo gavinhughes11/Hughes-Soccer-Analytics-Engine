@@ -27,6 +27,11 @@ pages = st.navigation(
         st.Page(
             "app/leaderboard.py", title="Leaderboard", icon=":material/leaderboard:"
         ),
+        st.Page(
+            "app/goalkeepers.py",
+            title="Goalkeepers",
+            icon=":material/sports_handball:",
+        ),
     ]
 )
 pages.run()
