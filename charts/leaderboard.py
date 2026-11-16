@@ -15,16 +15,22 @@ def plot_leaderboard(table, stat, title, subtitle, n=10):
     positions = range(len(top))
     ax.barh(positions, top[stat], color=colors, height=0.6)
     ax.set_yticks(positions, top["player_name"])
+    decimals = 3 if top[stat].abs().max() < 0.5 else 2
     for y, (value, team) in enumerate(zip(top[stat], top["team_name"])):
+        if value >= 0:
+            label, side = f"  {value:.{decimals}f}  -  {team}", "left"
+        else:
+            label, side = f"{team}  -  {value:.{decimals}f}  ", "right"
         ax.text(
             value,
             y,
-            f"  {value:.2f}  -  {team}",
+            label,
+            ha=side,
             va="center",
             fontsize=10,
             color=CHART_COLORS["subtext"],
         )
-    ax.set_xlim(0, top[stat].max() * 1.7)
+    ax.set_xlim(min(0, top[stat].min() * 2.5), max(0, top[stat].max()) * 1.7)
     for side in ["top", "right", "bottom", "left"]:
         ax.spines[side].set_visible(False)
     ax.xaxis.set_visible(False)

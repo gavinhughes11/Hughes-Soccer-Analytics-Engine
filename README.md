@@ -23,15 +23,29 @@ Pick a league and season in the sidebar. Each league has its three most recent s
 
 **Player page**
 - Search any player with 450+ minutes for a team in that season.
-- See season totals for minutes, goals, xG and shots, plus the Finishing Rating (latest season only).
+- See season totals for minutes, goals, xG, shots and goals added (g+), plus the Finishing Rating (latest season only).
 - The shot map shows every shot. Goals are filled in the team's color, misses are gray rings, and dot size shows xG.
 - The percentile pizza covers 7 per-90 stats, compared with players at the same position.
+- The g+ chart breaks a player's goals added into 6 action types per 90, with percentiles against the same position.
 
 **Leaderboard**
-- Shows the top 5–25 players for the Finishing Rating or any of the 7 per-90 stats.
+- Shows the top 5–25 players for the Finishing Rating, 7 shooting and passing stats, or g+ (total and each action type), all per 90.
+- Filter by position to compare like with like, for example the top center backs by g+.
 - Bars use team colors, with a table underneath.
 
 Every chart has a **Download PNG** button for a full-resolution copy.
+
+## Goals added (g+)
+
+Shots and assists only describe the end of an attack, so they say little about defenders and deep-lying midfielders. [Goals added](https://www.americansocceranalysis.com/what-are-goals-added), American Soccer Analysis's model, credits every on-ball action by how much it changed the team's chances of scoring and conceding. The app shows **g+ above average**, split into 6 action types: dribbling, fouling, interrupting, passing, receiving and shooting.
+
+Examples from MLS 2026 regular season (as of Nov 13, 2026), g+ per 90:
+
+| Player | Position | g+ per 90 | Percentile vs. position | Strongest action |
+|---|---|---|---|---|
+| Lionel Messi | Winger | 0.426 | 100 | Dribbling |
+| Justin Che | Center back | 0.132 | 100 | Passing |
+| Jeppe Tverskov | Defensive midfielder | 0.072 | 100 | Passing and interrupting |
 
 ## The Finishing Rating
 
@@ -75,7 +89,7 @@ k decides how much to trust a player's own record. I tested candidate values by 
 
 ## Data
 
-- **Source:** [American Soccer Analysis](https://www.americansocceranalysis.com). Player stats come through the [itscalledsoccer](https://github.com/American-Soccer-Analysis/itscalledsoccer) package, and shots come from the ASA API.
+- **Source:** [American Soccer Analysis](https://www.americansocceranalysis.com). Player stats and goals added (g+) come through the [itscalledsoccer](https://github.com/American-Soccer-Analysis/itscalledsoccer) package, and shots come from the ASA API.
 - **Coverage:** regular season, with a sidebar toggle to include playoffs.
 - **Updates:** a GitHub Actions workflow refreshes the data every Tuesday, and the app's sidebar shows the date of the last refresh.
 - **Not covered:** Leagues Cup, U.S. Open Cup, CONCACAF competitions and in-league cups (NWSL Challenge Cup, USL Jägermeister Cup).
@@ -86,7 +100,7 @@ k decides how much to trust a player's own record. I tested candidate values by 
 - The 450-minute minimum applies per team, so a traded player can appear once for each team in per-90 leaderboards.
 - The Finishing Rating is only shown for the latest season, and new seasons have small samples. For example, USL Super League 2026 has just 9 rated players.
 - Percentiles compare players within their position (GK, CB, FB, DM, CM, AM, W, ST).
-- The stats are shot-based, so they say little about defenders and deep-lying midfielders.
+- g+ isn't available for goalkeepers; ASA rates keepers with a separate model.
 - Some USL clubs don't have team colors yet and use a default blue.
 - The data refreshes weekly, so the newest games can take up to a week to appear.
 
@@ -116,7 +130,7 @@ python -m pytest                    # run the tests
 ```text
 streamlit_app.py   App entry point: sidebar and page navigation
 app/               Player and Leaderboard pages, cached data loaders
-charts/            Shot map, pizza and leaderboard charts, team colors, data credit
+charts/            Shot map, pizza, g+ and leaderboard charts, team colors, data credit
 metrics/           Per-90 stats, percentiles, Finishing Rating
 data_sources/      American Soccer Analysis data access
 scripts/           Data refresh, k backtest, team color builder
@@ -128,7 +142,6 @@ config.py          Settings: leagues, seasons, minimums, weights, colors
 
 ## What's next
 
-- Goals added (g+), so defenders and midfielders get useful profiles
 - A USL-to-MLS prospect finder
 - A goalie tracker to see who's hot and how it's impacting their team
 
