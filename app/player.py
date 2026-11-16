@@ -6,6 +6,7 @@ from app.data import (
     load_shots,
     load_raw_stats,
 )
+from charts.gplus import plot_gplus
 from charts.pizza import plot_pizza
 from charts.shot_map import plot_shot_map
 from charts.team_colors import team_color
@@ -41,7 +42,12 @@ if season == SEASONS[league][-1]:
     if len(match) > 0:
         rating = int(round(match["finishing_rating"].iloc[0], 0))
 
-cols = st.columns(5)
+if player["general_position"] == "GK":
+    gplus_total = "-"
+else:
+    gplus_total = f"{all_rows['gplus'].sum():+.2f}"
+
+cols = st.columns(6)
 cols[0].metric("Minutes", int(all_rows["minutes_played"].sum()))
 cols[1].metric("Goals", int(all_rows["goals"].sum()))
 cols[2].metric("xG", f"{all_rows['xgoals'].sum():.1f}")
@@ -50,6 +56,13 @@ cols[4].metric(
     "Finishing Rating",
     rating,
     help="0 to 100. Needs 20+ shots and 450+ minutes. Latest season only.",
+)
+cols[5].metric(
+    "g+",
+    gplus_total,
+    help="Goals added above average: how much a player's actions changed their team's "
+    "chances of scoring and conceding, compared with an average player. Not available "
+    "for goalkeepers.",
 )
 
 shots = load_shots(league, season, playoffs)
@@ -80,3 +93,21 @@ with right:
         mime="image/png",
         on_click="ignore",
     )
+
+st.subheader("Goals added (g+)")
+if player["general_position"] == "GK":
+    st.info("g+ isn't available for goalkeepers.")
+else:
+    left, right = st.columns(2)
+    with left:
+        fig = plot_gplus(player, f"{name} - {season}", league.upper(), color=color)
+        png = to_png(fig)
+        plt.close(fig)
+        st.image(png, width="stretch")
+        st.download_button(
+            label="Download PNG",
+            data=png,
+            file_name=f"{file_start}-gplus.png",
+            mime="image/png",
+            on_click="ignore",
+        )

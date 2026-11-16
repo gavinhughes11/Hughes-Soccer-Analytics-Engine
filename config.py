@@ -47,6 +47,15 @@ GPLUS_STATS = [
     "gplus_shooting",
 ]
 
+GPLUS_LABELS = {
+    "gplus_dribbling": "Dribbling",
+    "gplus_fouling": "Fouling",
+    "gplus_interrupting": "Interrupting",
+    "gplus_passing": "Passing",
+    "gplus_receiving": "Receiving",
+    "gplus_shooting": "Shooting",
+}
+
 FINISHING_K = 300
 
 MIN_SHOTS = 20
