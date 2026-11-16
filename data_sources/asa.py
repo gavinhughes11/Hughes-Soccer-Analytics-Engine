@@ -1,6 +1,6 @@
-from itscalledsoccer import AmericanSoccerAnalysis
-import requests
 import pandas as pd
+import requests
+from itscalledsoccer import AmericanSoccerAnalysis
 
 ASA_BASE_URL = "https://app.americansocceranalysis.com/api/v1"
 
@@ -51,17 +51,41 @@ def get_player_goals_added(league, season, stages):
     stats = asa.get_player_goals_added(
         leagues=league, season_name=season, stage_name=stages, split_by_teams=True
     )
+    return flatten_goals_added(stats, "gplus_")
+
+
+def flatten_goals_added(stats, prefix):
     rows = []
     for _, row in stats.iterrows():
         record = {"player_id": row["player_id"], "team_id": row["team_id"]}
         for action in row["data"]:
-            column = f"gplus_{action['action_type'].lower()}"
+            column = f"{prefix}{action['action_type'].lower()}"
             record[column] = action["goals_added_above_avg"]
         rows.append(record)
-    gplus = pd.DataFrame(rows)
-    action_columns = [c for c in gplus.columns if c.startswith("gplus_")]
-    gplus["gplus"] = gplus[action_columns].sum(axis=1)
-    return gplus
+    flat = pd.DataFrame(rows)
+    action_columns = [c for c in flat.columns if c.startswith(prefix)]
+    flat[prefix.rstrip("_")] = flat[action_columns].sum(axis=1)
+    return flat
+
+
+def get_goalkeeper_xgoals(league, season, stages):
+    stats = asa.get_goalkeeper_xgoals(
+        leagues=league, season_name=season, stage_name=stages, split_by_teams=True
+    )
+    players = get_players(league)
+    players = players[["player_id", "player_name"]]
+    teams = get_teams(league)
+    teams = teams[["team_id", "team_name"]]
+    stats = stats.merge(players, how="left", on="player_id")
+    stats = stats.merge(teams, how="left", on="team_id")
+    return stats
+
+
+def get_goalkeeper_goals_added(league, season, stages):
+    stats = asa.get_goalkeeper_goals_added(
+        leagues=league, season_name=season, stage_name=stages, split_by_teams=True
+    )
+    return flatten_goals_added(stats, "gk_gplus_")
 
 
 if __name__ == "__main__":
