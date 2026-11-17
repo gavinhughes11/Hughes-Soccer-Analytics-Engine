@@ -2,7 +2,7 @@
 
 ![Tests](https://github.com/gavinhughes11/Hughes-Soccer-Analytics-Engine/actions/workflows/tests.yml/badge.svg)
 
-Player analytics for American pro soccer: **MLS, NWSL, USL Championship, USL League One and USL Super League**. It has shot maps, percentile profiles, leaderboards, goalkeeper stats and a custom **Finishing Rating**, built with Python and Streamlit.
+Player analytics for American pro soccer: **MLS, MLS NEXT Pro, NWSL, USL Championship, USL League One and USL Super League**, with every season back to 2013. It has shot maps, percentile profiles, leaderboards, goalkeeper stats and a custom **Finishing Rating**, built with Python and Streamlit.
 
 **[Open the live app →](https://hughes-soccer-analytics.streamlit.app)**
 <p align="center">
@@ -14,12 +14,13 @@ Player analytics for American pro soccer: **MLS, NWSL, USL Championship, USL Lea
   <img src="images/cuypers_2026_pizza.png" alt="Hugo Cuypers 2026 percentile pizza chart" width="42%">
 </p>
 <p align="center">
-  <img src="images/mls_2026_xg_per90_leaderboard.png" alt="MLS 2026 xG per 90 leaderboard" width="80%">
+  <img src="images/mls_2026_xg_per90_leaderboard.png" alt="MLS 2026 xG per 90 leaderboard" width="48%">
+  <img src="images/mls-2026-top-10-goals_prevented-goalkeepers.png" alt="MLS 2026 goals prevented leaderboard for goalkeepers" width="48%">
 </p>
 
 ## What's in the app
 
-Pick a league and season in the sidebar. Each league has its three most recent seasons. **Include playoffs** is on by default; turn it off to see regular season only.
+Pick a league and season in the sidebar. Every season is available, back to each league's first season in ASA's data: MLS 2013, NWSL 2016, USL Championship 2017, USL League One 2019, MLS NEXT Pro 2022 and USL Super League 2024-25. **Include playoffs** is on by default; turn it off to see regular season only.
 
 **Player page**
 - Search any player with 450+ minutes for a team in that season.
@@ -77,54 +78,57 @@ Goals minus xG (expected goals) is the usual way to measure finishing, but it's 
 2. **Qualify:** the player needs 450+ minutes and 20+ shots.
 3. **Shrink toward average:** goals above xG per shot is pulled toward the league average:
 
-   `shrunk finishing = (goals − xG + k × league average) / (shots + k)`, with **k = 300**
+   `shrunk finishing = (goals − xG + k × league average) / (shots + k)`, with **k = 600**
 
-   This is like adding 300 league-average shots to every player's record. A player needs a big sample before their finishing moves far from average.
+   This is like adding 600 league-average shots to every player's record. A player needs a big sample before their finishing moves far from average.
 4. **Season score** = 0.7 × percentile of shrunk finishing + 0.3 × percentile of shots per 90. These percentiles compare across all positions.
 5. **Final rating** = 0.7 × this season + 0.2 × last season + 0.1 × two seasons ago. A missing season counts as this season's score.
 
-Examples from MLS 2026 (as of Oct 22, 2026):
+Examples from MLS 2026, including playoffs (as of Nov 17, 2026):
 
 | Player | Shots | Goals | xG | Finishing Rating |
 |---|---|---|---|---|
-| Lionel Messi | 169 | 25 | 23.8 | 91 |
+| Lionel Messi | 183 | 26 | 25.1 | 92 |
 | Hugo Cuypers | 40 | 13 | 10.5 | 72 |
-| Rafael Navarro | 87 | 18 | 19.8 | 41 |
+| Rafael Navarro | 96 | 19 | 21.3 | 37 |
 
 Cuypers beat his xG by more than Messi did, but on far fewer shots, so the rating trusts it less.
 
 ## Choosing k: a backtest
 
-k decides how much to trust a player's own record. I tested candidate values by using each player's finishing in one season to predict their finishing in the next. The test covered every pair of consecutive seasons in all five leagues: 10 season pairs and 1,530 player-season pairs, weighted by shots. The code is in [`scripts/tune_k.py`](scripts/tune_k.py). These numbers are as of Oct 22, 2026. The 2026 season is still in progress, so they move a little with each data refresh.
+k decides how much to trust a player's own record. I tested candidate values by using each player's finishing in one season to predict their finishing in the next. The test covered every pair of consecutive seasons in all six leagues, back to 2013: 44 season pairs and 7,411 player-season pairs, weighted by shots. The code is in [`scripts/tune_k.py`](scripts/tune_k.py). These numbers are as of Nov 17, 2026.
 
 | Prediction | Error compared with "everyone is average" |
 |---|---|
-| k = 40 | 10.1% worse |
-| k = 250 | 0.99% better |
-| k = 275 | 1.03% better |
-| **k = 300 (chosen)** | **1.05% better** |
-| k = 350 | 1.06% better |
+| k = 40 | 13.4% worse |
+| k = 300 | 0.04% better |
+| k = 500 | 0.28% better |
+| **k = 600 (chosen)** | **0.30% better** |
+| k = 800 | 0.29% better |
+| k = 1000 | 0.26% better |
 
-- The error is almost flat from 250 to 350 (0.99% to 1.06% better than average). The best k shifts a little as new games come in, and 300 sits in the middle of that flat range, so the exact value barely matters.
-- A small k, which trusts each player's own record, does worse than assuming everyone is average. With no shrinkage at all (k = 0, raw goals minus xG), the prediction is 180% worse.
-- Even the best k is only about 1% better than "everyone is average." **Most of a player's goals above xG in one season is noise.** Finishing barely carries over from one season to the next.
+- The error is almost flat from 500 to 800, and 600 is the best value tested.
+- More data changed the answer. With only the three most recent seasons (10 season pairs), k = 300 looked best, so the app used it at first. Testing every season showed that even more shrinkage predicts better, and the rating moved to k = 600. The ratings themselves barely changed: no player in any league moved more than 2 points, and the order stayed almost exactly the same.
+- A small k, which trusts each player's own record, does worse than assuming everyone is average. With no shrinkage at all (k = 0, raw goals minus xG), the prediction is 200% worse.
+- Even the best k is only 0.3% better than "everyone is average." **Almost all of a player's goals above xG in one season is noise.** Finishing barely carries over from one season to the next.
 
 ## Data
 
 - **Source:** [American Soccer Analysis](https://www.americansocceranalysis.com). Player and goalkeeper stats and goals added (g+) come through the [itscalledsoccer](https://github.com/American-Soccer-Analysis/itscalledsoccer) package, and shots come from the ASA API.
-- **Coverage:** regular season, with a sidebar toggle to include playoffs.
-- **Updates:** a GitHub Actions workflow refreshes the data every Tuesday, and the app's sidebar shows the date of the last refresh.
+- **Coverage:** every season since each league's first season in ASA's data (MLS 2013, NWSL 2016, USL Championship 2017, USL League One 2019, MLS NEXT Pro 2022, USL Super League 2024-25). Regular season, with a sidebar toggle to include playoffs.
+- **Updates:** a GitHub Actions workflow refreshes each league's two latest seasons every Tuesday; older seasons don't change. The app's sidebar shows the date of the last refresh.
 - **Not covered:** Leagues Cup, U.S. Open Cup, CONCACAF competitions and in-league cups (NWSL Challenge Cup, USL Jägermeister Cup).
 
 ## Limitations
 
 - Totals can differ from other sites, because of which competitions are covered and how goals are credited.
 - The 450-minute minimum applies per team, so a traded player can appear once for each team in per-90 leaderboards.
-- The Finishing Rating is only shown for the latest season, and new seasons have small samples. For example, USL Super League 2026 has just 9 rated players.
+- The Finishing Rating is only shown for the latest season, and new seasons have small samples. For example, USL Super League 2026 has just 16 rated players.
 - Percentiles compare players within their position (GK, CB, FB, DM, CM, AM, W, ST).
 - Keepers are rated with ASA's separate goalkeeper g+ model, so outfield g+ leaderboards leave them out; they're ranked on the Goalkeepers page instead.
-- Each league-season has only 8–45 keepers with 450+ minutes, so keeper percentiles move in big steps, especially in USL Super League.
-- Some USL clubs don't have team colors yet and use a default blue.
+- Each league-season has only 8–71 keepers with 450+ minutes, so keeper percentiles move in big steps, especially in USL Super League.
+- NWSL 2020 isn't included: that year had no regular season, only the Challenge Cup and the Fall Series. Other 2020 seasons were shortened by the pandemic.
+- MLS NEXT Pro reserve teams use their MLS parent club's color. Independent MLS NEXT Pro clubs, some USL clubs and defunct clubs don't have team colors yet and use a default blue.
 - The data refreshes weekly, so the newest games can take up to a week to appear.
 
 ## Run it locally
@@ -143,7 +147,8 @@ streamlit run streamlit_app.py
 Run other commands from the repo root with `python -m`:
 
 ```bash
-python -m scripts.refresh_data      # re-download all data (takes a few minutes)
+python -m scripts.refresh_data      # re-download each league's two latest seasons (a few minutes)
+python -m scripts.refresh_data --all  # re-download every season (about 20 minutes)
 pip install -r requirements-dev.txt
 python -m pytest                    # run the tests
 ```
@@ -165,7 +170,7 @@ config.py          Settings: leagues, seasons, minimums, weights, colors
 
 ## What's next
 
-- A USL-to-MLS prospect finder
+- A prospect finder: which MLS NEXT Pro and USL players are most likely to break into MLS or the USL Championship next season, tested against past seasons
 - Goalkeeper form: who's hot over their last few games, and how it's affecting their team (once the 2027 season starts)
 
 ## Built with

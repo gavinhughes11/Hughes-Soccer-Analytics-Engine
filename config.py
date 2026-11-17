@@ -121,7 +121,7 @@ GK_GPLUS_LABELS = {
     "gk_gplus_sweeping": "Sweeping",
 }
 
-FINISHING_K = 300
+FINISHING_K = 600
 
 MIN_SHOTS = 20
 
