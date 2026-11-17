@@ -2,7 +2,7 @@
 
 ![Tests](https://github.com/gavinhughes11/Hughes-Soccer-Analytics-Engine/actions/workflows/tests.yml/badge.svg)
 
-Player analytics for American pro soccer: **MLS, NWSL, USL Championship, USL League One and USL Super League**. It has shot maps, percentile profiles, leaderboards and a custom **Finishing Rating**, built with Python and Streamlit.
+Player analytics for American pro soccer: **MLS, NWSL, USL Championship, USL League One and USL Super League**. It has shot maps, percentile profiles, leaderboards, goalkeeper stats and a custom **Finishing Rating**, built with Python and Streamlit.
 
 **[Open the live app →](https://hughes-soccer-analytics.streamlit.app)**
 <p align="center">
@@ -27,11 +27,15 @@ Pick a league and season in the sidebar. Each league has its three most recent s
 - The shot map shows every shot. Goals are filled in the team's color, misses are gray rings, and dot size shows xG.
 - The percentile pizza covers 7 per-90 stats, compared with players at the same position.
 - The g+ chart breaks a player's goals added into 6 action types per 90, with percentiles against the same position.
+- Goalkeepers get their own version: shots faced, saves, save %, goals prevented and keeper g+, plus a keeper g+ chart.
 
 **Leaderboard**
 - Shows the top 5–25 players for the Finishing Rating, 7 shooting and passing stats, or g+ (total and each action type), all per 90.
 - Filter by position to compare like with like, for example the top center backs by g+.
 - Bars use team colors, with a table underneath.
+
+**Goalkeepers**
+- Ranks keepers by goals prevented (total or per 90), save %, or keeper g+ (total and each of its 6 action types) per 90.
 
 Every chart has a **Download PNG** button for a full-resolution copy.
 
@@ -46,6 +50,24 @@ Examples from MLS 2026 regular season (as of Nov 13, 2026), g+ per 90:
 | Lionel Messi | Winger | 0.426 | 100 | Dribbling |
 | Justin Che | Center back | 0.132 | 100 | Passing |
 | Jeppe Tverskov | Defensive midfielder | 0.072 | 100 | Passing and interrupting |
+
+## Goalkeepers
+
+Save % treats every shot the same, but stopping a penalty is harder than holding a 30-yard shot hit straight at you. **Goals prevented** uses xG to account for how hard each shot was:
+
+`goals prevented = xG faced − goals conceded`
+
+A positive number means the keeper let in fewer goals than the shots they faced deserved. The app also shows save % (saves ÷ (saves + goals conceded)) and **keeper g+**, ASA's goals added model for goalkeepers. It splits a keeper's value into 6 actions: claiming, fielding, handling, passing, shot-stopping and sweeping.
+
+Examples from MLS 2026 regular season (as of Nov 16, 2026):
+
+| Keeper | Team | Goals prevented | Per 90 | Save % | Keeper g+ per 90 |
+|---|---|---|---|---|---|
+| Matt Turner | New England | +15.6 | 0.41 | 75.3 | 0.438 |
+| Brian Schwake | Nashville | +13.6 | 0.37 | 78.9 | 0.386 |
+| Andrew Thomas | Seattle | +11.0 | 0.29 | 72.8 | 0.303 |
+
+Schwake has the best save %, but Turner faced harder shots and prevented more goals. Shot-stopping makes up about three-quarters of keeper g+ across MLS keepers, so the two measures mostly agree; the other 5 actions separate keepers only a little.
 
 ## The Finishing Rating
 
@@ -89,7 +111,7 @@ k decides how much to trust a player's own record. I tested candidate values by 
 
 ## Data
 
-- **Source:** [American Soccer Analysis](https://www.americansocceranalysis.com). Player stats and goals added (g+) come through the [itscalledsoccer](https://github.com/American-Soccer-Analysis/itscalledsoccer) package, and shots come from the ASA API.
+- **Source:** [American Soccer Analysis](https://www.americansocceranalysis.com). Player and goalkeeper stats and goals added (g+) come through the [itscalledsoccer](https://github.com/American-Soccer-Analysis/itscalledsoccer) package, and shots come from the ASA API.
 - **Coverage:** regular season, with a sidebar toggle to include playoffs.
 - **Updates:** a GitHub Actions workflow refreshes the data every Tuesday, and the app's sidebar shows the date of the last refresh.
 - **Not covered:** Leagues Cup, U.S. Open Cup, CONCACAF competitions and in-league cups (NWSL Challenge Cup, USL Jägermeister Cup).
@@ -100,7 +122,8 @@ k decides how much to trust a player's own record. I tested candidate values by 
 - The 450-minute minimum applies per team, so a traded player can appear once for each team in per-90 leaderboards.
 - The Finishing Rating is only shown for the latest season, and new seasons have small samples. For example, USL Super League 2026 has just 9 rated players.
 - Percentiles compare players within their position (GK, CB, FB, DM, CM, AM, W, ST).
-- g+ isn't available for goalkeepers; ASA rates keepers with a separate model.
+- Keepers are rated with ASA's separate goalkeeper g+ model, so outfield g+ leaderboards leave them out; they're ranked on the Goalkeepers page instead.
+- Each league-season has only 8–45 keepers with 450+ minutes, so keeper percentiles move in big steps, especially in USL Super League.
 - Some USL clubs don't have team colors yet and use a default blue.
 - The data refreshes weekly, so the newest games can take up to a week to appear.
 
@@ -129,9 +152,9 @@ python -m pytest                    # run the tests
 
 ```text
 streamlit_app.py   App entry point: sidebar and page navigation
-app/               Player and Leaderboard pages, cached data loaders
+app/               Player, Leaderboard and Goalkeepers pages, cached data loaders
 charts/            Shot map, pizza, g+ and leaderboard charts, team colors, data credit
-metrics/           Per-90 stats, percentiles, Finishing Rating
+metrics/           Per-90 stats, percentiles, Finishing Rating, goalkeeper stats
 data_sources/      American Soccer Analysis data access
 scripts/           Data refresh, k backtest, team color builder
 data/              Saved data (parquet files) and team colors
@@ -143,7 +166,7 @@ config.py          Settings: leagues, seasons, minimums, weights, colors
 ## What's next
 
 - A USL-to-MLS prospect finder
-- A goalie tracker to see who's hot and how it's impacting their team
+- Goalkeeper form: who's hot over their last few games, and how it's affecting their team (once the 2027 season starts)
 
 ## Built with
 
