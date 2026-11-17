@@ -1,10 +1,11 @@
 import pandas as pd
+
 from config import (
     FINISHING_K,
-    MIN_SHOTS,
     FINISHING_WEIGHT,
-    VOLUME_WEIGHT,
+    MIN_SHOTS,
     SEASON_WEIGHTS,
+    VOLUME_WEIGHT,
 )
 from metrics.per90 import add_per90, filter_min_minutes
 

@@ -1,7 +1,7 @@
 import pandas as pd
+
 from config import SEASONS
 from metrics.finishing_rating import combine_player_rows, shrink
-
 
 if __name__ == "__main__":
     candidates = [0, 10, 20, 40, 60, 100, 150, 200, 250, 275, 300, 350, 500, 1000]

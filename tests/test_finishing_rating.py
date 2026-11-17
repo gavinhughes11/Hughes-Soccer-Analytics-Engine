@@ -1,8 +1,9 @@
 import pandas as pd
 import pytest
+
 from metrics.finishing_rating import (
-    shrink,
     finishing_rating,
+    shrink,
 )
 
 

@@ -1,5 +1,9 @@
-import streamlit as st
 import matplotlib.pyplot as plt
+import streamlit as st
+
+from app.data import load_finishing_ratings, load_player_stats, load_raw_stats
+from charts.export import to_png
+from charts.leaderboard import plot_leaderboard
 from config import (
     GPLUS_LABELS,
     PER90_STATS,
@@ -7,9 +11,6 @@ from config import (
     SEASONS,
     STAT_LABELS,
 )
-from app.data import load_raw_stats, load_finishing_ratings, load_player_stats
-from charts.leaderboard import plot_leaderboard
-from charts.export import to_png
 
 league = st.session_state["league"]
 season = st.session_state["season"]

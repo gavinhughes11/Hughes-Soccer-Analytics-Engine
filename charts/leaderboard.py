@@ -1,9 +1,10 @@
-import pandas as pd
 import matplotlib.pyplot as plt
+import pandas as pd
+
+from charts.credit import add_credit
 from charts.team_colors import team_color
 from config import CHART_COLORS
 from metrics.per90 import add_per90, filter_min_minutes
-from charts.credit import add_credit
 
 
 def plot_leaderboard(table, stat, title, subtitle, n=10):

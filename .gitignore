@@ -223,3 +223,6 @@ __marimo__/
 
 # Handoff files
 HANDOFF.md
+
+# macOS Finder files
+.DS_Store

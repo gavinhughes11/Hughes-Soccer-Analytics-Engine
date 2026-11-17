@@ -1,6 +1,8 @@
-import streamlit as st
-from config import LEAGUES, SEASONS
 from pathlib import Path
+
+import streamlit as st
+
+from config import LEAGUES, SEASONS
 
 st.set_page_config(page_title="Hughes Soccer Analytics", page_icon="⚽", layout="wide")
 

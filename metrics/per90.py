@@ -1,5 +1,6 @@
-from config import PER90_STATS, MIN_MINUTES
 import pandas as pd
+
+from config import MIN_MINUTES, PER90_STATS
 
 
 def add_per90(stats, columns=PER90_STATS):

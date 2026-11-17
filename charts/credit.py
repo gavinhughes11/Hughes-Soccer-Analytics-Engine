@@ -1,4 +1,4 @@
-from config import CHART_CREDIT, CHART_COLORS
+from config import CHART_COLORS, CHART_CREDIT
 
 
 def add_credit(fig):

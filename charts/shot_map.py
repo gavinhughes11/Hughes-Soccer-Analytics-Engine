@@ -1,8 +1,9 @@
 import pandas as pd
 from mplsoccer import VerticalPitch
+
+from charts.credit import add_credit
 from charts.team_colors import team_color
 from config import CHART_COLORS
-from charts.credit import add_credit
 
 
 def plot_shot_map(shots, title, color=CHART_COLORS["goal"]):
