@@ -2,7 +2,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from config import LEAGUES
+from config import LEAGUES, MLSNP_PARENTS
 from data_sources.asa import get_teams
 
 OUTPUT = Path("data/team_colors.csv")
@@ -104,6 +104,14 @@ CLUB_COLORS = {
 }
 
 
+def club_color(team_name):
+    # MLS NEXT Pro reserve teams use their MLS parent club's color.
+    if team_name in CLUB_COLORS:
+        return CLUB_COLORS[team_name]
+    parent = MLSNP_PARENTS.get(team_name)
+    return CLUB_COLORS.get(parent)
+
+
 def main():
     if OUTPUT.exists():
         print(f"{OUTPUT} already exists, so it was not overwritten.")
@@ -116,7 +124,7 @@ def main():
         tables.append(teams)
 
     all_teams = pd.concat(tables, ignore_index=True)
-    all_teams["color"] = all_teams["team_name"].map(CLUB_COLORS)
+    all_teams["color"] = all_teams["team_name"].map(club_color)
     all_teams = all_teams.sort_values(["league", "team_name"])
     all_teams.to_csv(OUTPUT, index=False)
 

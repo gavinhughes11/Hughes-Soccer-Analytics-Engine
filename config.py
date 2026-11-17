@@ -1,5 +1,6 @@
 LEAGUES = {
     "mls": "Major League Soccer",
+    "mlsnp": "MLS NEXT Pro",
     "nwsl": "National Women's Soccer League",
     "uslc": "USL Championship",
     "usl1": "USL League One",
@@ -8,10 +9,43 @@ LEAGUES = {
 
 CURRENT_SEASON = "2026"
 
+# MLS NEXT Pro reserve teams and their MLS parent clubs. Teams not listed here
+# (Carolina Core, Chattanooga FC, Connecticut United FC) are independent.
+MLSNP_PARENTS = {
+    "Atlanta United 2": "Atlanta United FC",
+    "Austin FC II": "Austin FC",
+    "Chicago Fire FC II": "Chicago Fire FC",
+    "Colorado Rapids 2": "Colorado Rapids",
+    "Columbus Crew 2": "Columbus Crew",
+    "Crown Legacy FC": "Charlotte FC",
+    "FC Cincinnati 2": "FC Cincinnati",
+    "Houston Dynamo FC 2": "Houston Dynamo FC",
+    "Huntsville City FC": "Nashville SC",
+    "Inter Miami CF II": "Inter Miami CF",
+    "Los Angeles FC 2": "Los Angeles FC",
+    "Minnesota United FC 2": "Minnesota United FC",
+    "New England Revolution II": "New England Revolution",
+    "New York City FC II": "New York City FC",
+    "New York Red Bulls II": "New York Red Bulls",
+    "North Texas SC": "FC Dallas",
+    "Orlando City B": "Orlando City SC",
+    "Philadelphia Union II": "Philadelphia Union",
+    "Portland Timbers 2": "Portland Timbers FC",
+    "Real Monarchs": "Real Salt Lake",
+    "San Jose Earthquakes II": "San Jose Earthquakes",
+    "Sporting Kansas City II": "Sporting Kansas City",
+    "St. Louis City SC 2": "St. Louis City SC",
+    "Tacoma Defiance": "Seattle Sounders FC",
+    "Toronto FC II": "Toronto FC",
+    "Vancouver Whitecaps FC 2": "Vancouver Whitecaps FC",
+    "Ventura County FC": "LA Galaxy",
+}
+
 MIN_MINUTES = 450
 
 SEASONS = {
     "mls": ["2024", "2025", "2026"],
+    "mlsnp": ["2024", "2025", "2026"],
     "nwsl": ["2024", "2025", "2026"],
     "uslc": ["2024", "2025", "2026"],
     "usl1": ["2024", "2025", "2026"],
