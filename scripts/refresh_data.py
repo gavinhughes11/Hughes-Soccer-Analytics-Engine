@@ -1,3 +1,4 @@
+import sys
 from datetime import date
 from pathlib import Path
 
@@ -15,10 +16,18 @@ DATA_DIR = Path("data")
 STAGES = {"": ["Regular Season", "Playoffs"], "_regular": ["Regular Season"]}
 
 
-def main():
+# The weekly refresh only re-downloads each league's latest seasons, because
+# older seasons don't change. The previous season is included so late
+# corrections still arrive after a new season starts.
+RECENT_SEASONS = 2
+
+
+def main(all_seasons=False):
     DATA_DIR.mkdir(exist_ok=True)
 
     for league, seasons in SEASONS.items():
+        if not all_seasons:
+            seasons = seasons[-RECENT_SEASONS:]
         for season in seasons:
             for (
                 suffix,
@@ -70,4 +79,5 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    # Run with --all once to download every season; the weekly refresh omits it.
+    main(all_seasons="--all" in sys.argv)

@@ -43,12 +43,22 @@ MLSNP_PARENTS = {
 
 MIN_MINUTES = 450
 
+
+def seasons_from(first_year, skip=()):
+    # Every season from first_year to CURRENT_SEASON, as strings.
+    years = range(first_year, int(CURRENT_SEASON) + 1)
+    return [str(year) for year in years if year not in skip]
+
+
+# Each league starts at its first season in American Soccer Analysis's data.
+# NWSL 2020 is skipped: it had no regular season, only the Challenge Cup
+# and the Fall Series.
 SEASONS = {
-    "mls": ["2024", "2025", "2026"],
-    "mlsnp": ["2024", "2025", "2026"],
-    "nwsl": ["2024", "2025", "2026"],
-    "uslc": ["2024", "2025", "2026"],
-    "usl1": ["2024", "2025", "2026"],
+    "mls": seasons_from(2013),
+    "mlsnp": seasons_from(2022),
+    "nwsl": seasons_from(2016, skip=[2020]),
+    "uslc": seasons_from(2017),
+    "usl1": seasons_from(2019),
     "usls": ["2024-25", "2025-26", "2026"],
 }
 
