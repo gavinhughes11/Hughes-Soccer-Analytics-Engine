@@ -82,3 +82,8 @@ def load_finishing_ratings(league, playoffs):
 @st.cache_data
 def load_raw_stats(league, season, playoffs):
     return read_stats(league, season, playoffs)
+
+
+@st.cache_data
+def load_raw_goalkeeper_stats(league, season, playoffs):
+    return read_goalkeeper_stats(league, season, playoffs)

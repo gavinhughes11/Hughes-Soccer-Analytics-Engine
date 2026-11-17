@@ -4,9 +4,16 @@ from charts.credit import add_credit
 from config import CHART_COLORS, GPLUS_LABELS, POSITION_LABELS
 
 
-def plot_gplus(player, title, league_name, color=CHART_COLORS["goal"]):
-    columns = list(GPLUS_LABELS)[::-1]
-    labels = [GPLUS_LABELS[c] for c in columns]
+def plot_gplus(
+    player,
+    title,
+    league_name,
+    color=CHART_COLORS["goal"],
+    labels=GPLUS_LABELS,
+    total="gplus",
+):
+    columns = list(labels)[::-1]
+    names = [labels[c] for c in columns]
     values = [player[f"{c}_per90"] for c in columns]
     percentiles = [player[f"{c}_per90_pct"] for c in columns]
     colors = [color if v >= 0 else CHART_COLORS["miss"] for v in values]
@@ -16,7 +23,7 @@ def plot_gplus(player, title, league_name, color=CHART_COLORS["goal"]):
     ax.set_facecolor(CHART_COLORS["surface"])
     positions = range(len(columns))
     ax.barh(positions, values, color=colors, height=0.6)
-    ax.set_yticks(positions, labels)
+    ax.set_yticks(positions, names)
     ax.axvline(0, color=CHART_COLORS["lines"], linewidth=1)
 
     limit = max(abs(v) for v in values) * 1.6
@@ -41,7 +48,7 @@ def plot_gplus(player, title, league_name, color=CHART_COLORS["goal"]):
 
     position = POSITION_LABELS[player["general_position"]]
     subtitle = (
-        f"g+ above average per 90 - total {player['gplus_per90']:+.3f} - "
+        f"g+ above average per 90 - total {player[f'{total}_per90']:+.3f} - "
         f"(number) = percentile vs. {league_name} {position}"
     )
     fig.suptitle(title, fontsize=16, color=CHART_COLORS["text"])
