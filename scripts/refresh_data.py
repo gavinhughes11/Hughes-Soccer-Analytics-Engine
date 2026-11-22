@@ -6,6 +6,7 @@ from config import SEASONS
 from data_sources.asa import (
     get_goalkeeper_goals_added,
     get_goalkeeper_xgoals,
+    get_player_bios,
     get_player_goals_added,
     get_player_xgoals,
     get_shots,
@@ -71,6 +72,11 @@ def main(all_seasons=False):
                 gk_gplus.to_parquet(gk_gplus_path, index=False)
                 print("GK g+ rows:", len(gk_gplus))
 
+    for league in SEASONS:
+        bios = get_player_bios(league=league)
+        bios_path = DATA_DIR / f"players_{league}.parquet"
+        bios.to_parquet(bios_path, index=False)
+        print("Bios: ", len(bios))
     today = date.today()
     updated = f"{today:%b} {today.day}, {today.year}"
     path = DATA_DIR / "last_updated.txt"

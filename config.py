@@ -152,4 +152,9 @@ POSITION_LABELS = {
     "ST": "strikers",
 }
 
+PROSPECT_LADDERS = {
+    "mls": ["mlsnp", "uslc"],
+    "uslc": ["mlsnp", "usl1"],
+}
+
 CHART_CREDIT = "Data: American Soccer Analysis"

@@ -88,6 +88,11 @@ def get_goalkeeper_goals_added(league, season, stages):
     return flatten_goals_added(stats, "gk_gplus_")
 
 
+def get_player_bios(league):
+    players = get_players(league=league)
+    return players[["player_id", "birth_date", "nationality", "height_ft", "height_in"]]
+
+
 if __name__ == "__main__":
     shots = get_shots("mls", "2026", ["Regular Season"])
     print(shots)
