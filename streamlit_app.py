@@ -34,6 +34,7 @@ pages = st.navigation(
             title="Goalkeepers",
             icon=":material/sports_handball:",
         ),
+        st.Page("app/prospects.py", title="Prospects", icon=":material/trending_up:"),
     ]
 )
 pages.run()

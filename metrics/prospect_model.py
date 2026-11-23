@@ -75,3 +75,15 @@ def backtest(table, target, test_seasons=TEST_SEASONS):
                 }
             )
     return pd.DataFrame(records)
+
+
+def predict_next_season(table, target, model="full"):
+    data = table[table["target"] == target].copy()
+    data["season"] = data["season"].astype(int)
+    train = data[data["breakout"].notna()].copy()
+    train["breakout"] = train["breakout"].astype(bool)
+    latest = data[data["season"] == data["season"].max()].copy()
+    numeric, categories = MODELS[model]
+    fitted = fit_model(train, numeric, categories)
+    latest["probability"] = predict(fitted, latest, numeric, categories)
+    return latest.sort_values("probability", ascending=False)

@@ -6,6 +6,7 @@ from metrics.finishing_rating import finishing_rating, season_scores
 from metrics.goalkeeping import add_goalkeeper_metrics
 from metrics.per90 import add_per90, filter_min_minutes
 from metrics.percentiles import add_percentiles
+from metrics.prospect_model import predict_next_season
 
 
 def file_suffix(playoffs):
@@ -87,3 +88,10 @@ def load_raw_stats(league, season, playoffs):
 @st.cache_data
 def load_raw_goalkeeper_stats(league, season, playoffs):
     return read_goalkeeper_stats(league, season, playoffs)
+
+
+@st.cache_data
+def load_prospects(target):
+    # Trains on every labelled season and scores the newest one (about 1 second).
+    table = pd.read_parquet("data/prospect_table.parquet")
+    return predict_next_season(table, target)
