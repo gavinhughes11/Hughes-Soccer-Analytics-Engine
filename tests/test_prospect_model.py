@@ -1,7 +1,7 @@
 import pandas as pd
 
 from metrics.prospect_model import (
-    PCT_FEATURES,
+    PROFILE_FEATURES,
     feature_matrix,
     precision_at_k,
     similar_breakouts,
@@ -27,20 +27,19 @@ def test_feature_matrix_lines_up_columns():
 
 
 def test_similar_breakouts_keeps_closest_same_position_breakouts():
-    pct = {column: [50.0] * 5 for column in PCT_FEATURES}
-    pct[PCT_FEATURES[0]] = [60.0, 90.0, 61.0, 60.0, 60.0]
+    profile = {column: [50.0] * 5 for column in PROFILE_FEATURES}
+    profile[PROFILE_FEATURES[0]] = [60.0, 90.0, 61.0, None, 60.0]
     table = pd.DataFrame(
         {
-            "player_name": ["close", "far", "not a breakout", "no stats", "keeper"],
+            "player_name": ["close", "far", "not a breakout", "no profile", "keeper"],
             "target": "mls",
             "breakout": [True, True, False, True, True],
-            "has_stats": [True, True, True, False, True],
             "general_position": ["ST", "ST", "ST", "ST", "GK"],
-            **pct,
+            **profile,
         }
     )
     player = table.iloc[0].copy()
-    player[PCT_FEATURES[0]] = 62.0
+    player[PROFILE_FEATURES[0]] = 62.0
 
     similar = similar_breakouts(table, "mls", player, n=5)
 

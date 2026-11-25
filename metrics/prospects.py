@@ -35,7 +35,27 @@ def season_totals(league, season):
     pool = add_percentiles(pool, per90_columns)
     pct_columns = [f"{column}_pct" for column in per90_columns]
     totals = totals.join(pool[pct_columns])
+
+    # Profile percentiles for everyone, bench players included, on the same scale as
+    # the 450+ pool. Only "Plays like" uses them; the model keeps the _pct columns.
+    for column in per90_columns:
+        totals[f"{column}_profile"] = totals[f"{column}_pct"].fillna(
+            profile_percentile(totals, pool, column)
+        )
     return totals
+
+
+def profile_percentile(totals, pool, column):
+    # Where each player's value would rank among 450+ minute players at the same
+    # position. Ties count half, the same way rank(pct=True) treats them.
+    result = pd.Series(float("nan"), index=totals.index)
+    for position, group in pool.groupby("general_position"):
+        values = group[column].dropna().sort_values()
+        rows = (totals["general_position"] == position) & totals[column].notna()
+        lower = values.searchsorted(totals.loc[rows, column], side="left")
+        upper = values.searchsorted(totals.loc[rows, column], side="right")
+        result[rows] = (lower + upper) / 2 / len(values) * 100
+    return result
 
 
 def candidates(target, season):

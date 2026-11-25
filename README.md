@@ -167,7 +167,7 @@ In 2025, 13 of the full model's top 25 MLS picks broke out, against 9 for the op
 
 There are 1,266 MLS candidates from 2026, and the model expects about 90 of them to break out. The top of the list is all MLS bench players, led by Samsy Keita, who is 16 and played 388 minutes for CF Montréal (78%). Among MLS NEXT Pro and USL players, the top three are David Poreba (Chicago Fire FC II, 41%), Maximo Carrizo (New York City FC II, 40%) and Owen Presthus (Columbus Crew 2, 38%).
 
-The "plays like" comparison looks for past breakouts at the same position with the closest per-90 percentiles. For Presthus, a fullback, the closest are Themi Antonoglou (Toronto FC II, 2022), Nick Scardina (Crown Legacy FC, 2024) and Frankie Westfield (Philadelphia Union II, 2024). They went on to play 521, 900 and 1,953 MLS minutes the next season.
+The "plays like" comparison looks for past breakouts at the same position with the closest per-90 percentiles. Bench players have under 450 minutes, so the app ranks their per-90 numbers against the players who do have 450+. That way everyone has a profile, though one built on 150 minutes is rough. The model itself doesn't use these. For Presthus, a fullback, the closest are Themi Antonoglou (Toronto FC II, 2022), Nick Scardina (Crown Legacy FC, 2024) and Frankie Westfield (Philadelphia Union II, 2024). They went on to play 521, 900 and 1,953 MLS minutes the next season.
 
 ### Two things I didn't expect
 

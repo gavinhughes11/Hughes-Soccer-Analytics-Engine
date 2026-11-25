@@ -96,48 +96,44 @@ else:
         ),
     )
     player = board.loc[pick]
-    if not player["has_stats"]:
-        st.info(
-            f"{player['player_name']} has no per-90 stats for {latest_season}, "
-            "so there is no profile to compare."
-        )
-    else:
-        similar = similar_breakouts(load_prospect_table(), target, player)
-        similar = similar.assign(source=similar["source"].map(source_name))
-        st.caption(
-            f"The past {LEAGUES[target]} breakouts at {player['general_position']} "
-            f"whose per-90 percentiles were closest to {player['player_name']}'s."
-        )
-        st.dataframe(
-            similar[
-                [
-                    "player_name",
-                    "season",
-                    "team_name",
-                    "source",
-                    "minutes_played",
-                    "next_minutes",
-                    "distance",
-                ]
-            ],
-            hide_index=True,
-            column_config={
-                "player_name": "Player",
-                "season": "Season",
-                "team_name": "Team",
-                "source": "Played in",
-                "minutes_played": st.column_config.NumberColumn("Minutes", format="%d"),
-                "next_minutes": st.column_config.NumberColumn(
-                    f"{LEAGUES[target]} minutes next season", format="%d"
-                ),
-                "distance": st.column_config.NumberColumn(
-                    "Distance",
-                    format="%.1f",
-                    help="Gap across 14 per-90 percentiles. Smaller is more alike.",
-                ),
-            },
-            alt=f"Past breakouts most like {player['player_name']}",
-        )
+    similar = similar_breakouts(load_prospect_table(), target, player)
+    similar = similar.assign(source=similar["source"].map(source_name))
+    st.caption(
+        f"The past {LEAGUES[target]} breakouts at {player['general_position']} "
+        f"whose per-90 percentiles were closest to {player['player_name']}'s. "
+        "Bench players are ranked against players with 450+ minutes, so a profile "
+        "built on a few hundred minutes is rough."
+    )
+    st.dataframe(
+        similar[
+            [
+                "player_name",
+                "season",
+                "team_name",
+                "source",
+                "minutes_played",
+                "next_minutes",
+                "distance",
+            ]
+        ],
+        hide_index=True,
+        column_config={
+            "player_name": "Player",
+            "season": "Season",
+            "team_name": "Team",
+            "source": "Played in",
+            "minutes_played": st.column_config.NumberColumn("Minutes", format="%d"),
+            "next_minutes": st.column_config.NumberColumn(
+                f"{LEAGUES[target]} minutes next season", format="%d"
+            ),
+            "distance": st.column_config.NumberColumn(
+                "Distance",
+                format="%.1f",
+                help="Gap across 14 per-90 percentiles. Smaller is more alike.",
+            ),
+        },
+        alt=f"Past breakouts most like {player['player_name']}",
+    )
 
 st.caption(
     f"**Breakout** = 450+ regular-season {LEAGUES[target]} minutes next season. "

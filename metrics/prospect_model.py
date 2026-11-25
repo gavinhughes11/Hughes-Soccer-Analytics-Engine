@@ -12,6 +12,9 @@ BASE_FEATURES = ["age", "minutes_played", "target_minutes"]
 # Within-league percentiles from metrics/prospects.py (blank ones were filled with 50).
 PCT_FEATURES = [f"{stat}_per90_pct" for stat in COUNT_COLUMNS]
 
+# The same percentiles for every player, bench included. Used only by "Plays like".
+PROFILE_FEATURES = [f"{stat}_per90_profile" for stat in COUNT_COLUMNS]
+
 STAT_FEATURES = BASE_FEATURES + PCT_FEATURES + ["affiliated", "has_stats"]
 
 # Model name -> (number columns, category columns that become 0/1 columns).
@@ -94,10 +97,10 @@ def similar_breakouts(table, target, player, n=3):
     past = table[
         (table["target"] == target)
         & table["breakout"].eq(True)
-        & table["has_stats"]
+        & table[PROFILE_FEATURES].notna().all(axis=1)
         & (table["general_position"] == player["general_position"])
     ].copy()
     # One row of a mixed table comes out as text-like "object", so make it numbers.
-    gaps = past[PCT_FEATURES] - player[PCT_FEATURES].astype(float)
+    gaps = past[PROFILE_FEATURES] - player[PROFILE_FEATURES].astype(float)
     past["distance"] = (gaps**2).sum(axis=1) ** 0.5
     return past.nsmallest(n, "distance")
