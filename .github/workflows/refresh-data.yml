@@ -22,6 +22,8 @@ jobs:
       - name: Refresh data (retry once if ASA is slow)
         run: |
           python -m scripts.refresh_data || { sleep 300; python -m scripts.refresh_data; }
+      - name: Rebuild the prospect table
+        run: python -m scripts.build_prospect_table
       - name: Commit new data
         run: |
           git config user.name "github-actions[bot]"

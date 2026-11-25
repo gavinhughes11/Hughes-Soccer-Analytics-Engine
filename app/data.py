@@ -91,7 +91,11 @@ def load_raw_goalkeeper_stats(league, season, playoffs):
 
 
 @st.cache_data
+def load_prospect_table():
+    return pd.read_parquet("data/prospect_table.parquet")
+
+
+@st.cache_data
 def load_prospects(target):
     # Trains on every labelled season and scores the newest one (about 1 second).
-    table = pd.read_parquet("data/prospect_table.parquet")
-    return predict_next_season(table, target)
+    return predict_next_season(load_prospect_table(), target)

@@ -1,6 +1,11 @@
 import pandas as pd
 
-from metrics.prospect_model import feature_matrix, precision_at_k
+from metrics.prospect_model import (
+    PCT_FEATURES,
+    feature_matrix,
+    precision_at_k,
+    similar_breakouts,
+)
 
 
 def test_precision_at_k():
@@ -19,3 +24,25 @@ def test_feature_matrix_lines_up_columns():
     assert list(x.columns) == ["age", "source_mlsnp", "source_uslc"]
     assert (x["source_uslc"] == 0).all()
     assert x["age"].iloc[1] == 23
+
+
+def test_similar_breakouts_keeps_closest_same_position_breakouts():
+    pct = {column: [50.0] * 5 for column in PCT_FEATURES}
+    pct[PCT_FEATURES[0]] = [60.0, 90.0, 61.0, 60.0, 60.0]
+    table = pd.DataFrame(
+        {
+            "player_name": ["close", "far", "not a breakout", "no stats", "keeper"],
+            "target": "mls",
+            "breakout": [True, True, False, True, True],
+            "has_stats": [True, True, True, False, True],
+            "general_position": ["ST", "ST", "ST", "ST", "GK"],
+            **pct,
+        }
+    )
+    player = table.iloc[0].copy()
+    player[PCT_FEATURES[0]] = 62.0
+
+    similar = similar_breakouts(table, "mls", player, n=5)
+
+    assert list(similar["player_name"]) == ["close", "far"]
+    assert similar["distance"].iloc[0] == 2.0

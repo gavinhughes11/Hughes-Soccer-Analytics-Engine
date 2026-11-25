@@ -87,3 +87,17 @@ def predict_next_season(table, target, model="full"):
     fitted = fit_model(train, numeric, categories)
     latest["probability"] = predict(fitted, latest, numeric, categories)
     return latest.sort_values("probability", ascending=False)
+
+
+def similar_breakouts(table, target, player, n=3):
+    # Past breakouts at the same position with the closest per-90 percentile profile.
+    past = table[
+        (table["target"] == target)
+        & table["breakout"].eq(True)
+        & table["has_stats"]
+        & (table["general_position"] == player["general_position"])
+    ].copy()
+    # One row of a mixed table comes out as text-like "object", so make it numbers.
+    gaps = past[PCT_FEATURES] - player[PCT_FEATURES].astype(float)
+    past["distance"] = (gaps**2).sum(axis=1) ** 0.5
+    return past.nsmallest(n, "distance")
